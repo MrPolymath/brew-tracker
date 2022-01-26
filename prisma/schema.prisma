@@ -7,6 +7,100 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AromaFamily {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  color  String
+  aromas Aroma[]
+}
+
+model Aroma {
+  id            String      @id @default(cuid())
+  name          String      @unique
+  color         String
+  aromaFamilyId String
+  aromaFamily   AromaFamily @relation(references: [id], fields: [aromaFamilyId])
+  brews         Brew[]
+}
+
+model FlavourFamily {
+  id      String    @id @default(cuid())
+  name    String    @unique
+  color   String
+  flavour Flavour[]
+}
+
+model Flavour {
+  id              String        @id @default(cuid())
+  name            String        @unique
+  color           String
+  flavourFamilyId String
+  brewId          String
+  flavourFamily   FlavourFamily @relation(references: [id], fields: [flavourFamilyId])
+  brews           Brew          @relation(references: [id], fields: [brewId])
+}
+
+model BrewMethod {
+  id    String @id @default("aeropress")
+  name  String
+  image String
+  brews Brew[]
+}
+
+model Coffee {
+  id         String   @id @default(cuid())
+  name       String
+  roastDate  DateTime @default(now())
+  origin     String
+  process    String
+  roaster    String
+  variety    String
+  producer   String
+  screenSize String
+  brews      Brew[]
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     Int?
+}
+
+model Brew {
+  id             String      @id @default(cuid())
+  createdAt      DateTime    @default(now())
+  cups           Int         @default(1)
+  waterTemp      Int         @default(95)
+  grindSize      Int         @default(30)
+  coffeeQuantity Int         @default(20)
+  waterQuantity  Int         @default(100)
+  isFavorite     Boolean     @default(false)
+  smellIntensity Int         @default(5)
+  smellQuality   Int         @default(5)
+  acidity        Int         @default(5)
+  sweetness      Int         @default(5)
+  bitterness     Int         @default(5)
+  body           Int         @default(5)
+  finish         String?
+  score          Int         @default(5)
+  time           Int         @default(5)
+  flavours       Flavour[]
+  aromas         Aroma[]
+  BrewMethod     BrewMethod? @relation(fields: [brewMethodId], references: [id])
+  brewMethodId   String?
+  Coffee         Coffee?     @relation(fields: [coffeeId], references: [id])
+  coffeeId       String?
+  steps          BrewStep[]
+  User           User?       @relation(fields: [userId], references: [id])
+  userId         Int?
+}
+
+model BrewStep {
+  id          String  @id @default(cuid())
+  name        String
+  stepNumber  Int
+  time        Int
+  description String?
+  Brew        Brew    @relation(fields: [brewId], references: [id])
+  brewId      String
+}
+
 model Post {
   id        Int     @id @default(autoincrement())
   title     String
@@ -15,19 +109,6 @@ model Post {
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  Int?
 }
-
-// model User {
-//   id            Int       @id @default(autoincrement())
-//   name          String?
-//   email         String?   @unique
-//   emailVerified DateTime? @map(name: "email_verified")
-//   image         String?
-//   createdAt     DateTime  @default(now()) @map(name: "created_at")
-//   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-//   posts         Post[]
-
-//   @@map(name: "users")
-// }
 
 model Account {
   id                 String  @id @default(cuid())
@@ -64,9 +145,11 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  brews         Brew[]
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
+  coffees       Coffee[]
 }
 
 model VerificationToken {
@@ -76,35 +159,3 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
-// model Account {
-//   id                 Int       @id @default(autoincrement())
-//   compoundId         String    @unique @map(name: "compound_id")
-//   userId             Int       @map(name: "user_id")
-//   providerType       String    @map(name: "provider_type")
-//   providerId         String    @map(name: "provider_id")
-//   providerAccountId  String    @map(name: "provider_account_id")
-//   refreshToken       String?   @map(name: "refresh_token")
-//   accessToken        String?   @map(name: "access_token")
-//   accessTokenExpires DateTime? @map(name: "access_token_expires")
-//   createdAt          DateTime  @default(now()) @map(name: "created_at")
-//   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
-
-//   @@unique([providerAccountId])
-//   @@index([providerAccountId], name: "providerAccountId")
-//   @@index([providerId], name: "providerId")
-//   @@index([userId], name: "userId")
-//   @@map(name: "accounts")
-// }
-
-// model Session {
-//   id           Int      @id @default(autoincrement())
-//   userId       Int      @map(name: "user_id")
-//   expires      DateTime
-//   sessionToken String   @unique @map(name: "session_token")
-//   accessToken  String   @unique @map(name: "access_token")
-//   createdAt    DateTime @default(now()) @map(name: "created_at")
-//   updatedAt    DateTime @default(now()) @map(name: "updated_at")
-
-//   @@map(name: "sessions")
-// }

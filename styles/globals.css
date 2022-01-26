@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dropdown {
+  border-color: rgb(203 213 225 / var(--tw-border-opacity)) !important;
+  --tw-border-opacity: 1;
+  border-width: 2px !important;
+  border-radius: 0.125rem !important;
+}

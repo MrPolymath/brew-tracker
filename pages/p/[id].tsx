@@ -1,6 +1,6 @@
 import React from "react";
 import { GetServerSideProps } from "next";
-import ReactMarkdown from "react-markdown";
+// import ReactMarkdown from "react-markdown";
 import Layout from "../../components/Layout";
 import Router from "next/router";
 import { PostProps } from "../../components/Post";
@@ -54,7 +54,7 @@ const Post: React.FC<PostProps> = (props) => {
       <div>
         <h2>{title}</h2>
         <p>By {props?.author?.name || "Unknown author"}</p>
-        <ReactMarkdown source={props.content} />
+        {/* <ReactMarkdown source={props.content} /> */}
         {!props.published && userHasValidSession && postBelongsToUser && (
           <button onClick={() => publishPost(props.id)}>Publish</button>
         )}
