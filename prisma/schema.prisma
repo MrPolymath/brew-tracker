@@ -7,37 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AromaFamily {
-  id     String  @id @default(cuid())
-  name   String  @unique
-  color  String
-  aromas Aroma[]
-}
-
 model Aroma {
-  id            String      @id @default(cuid())
-  name          String      @unique
-  color         String
-  aromaFamilyId String
-  aromaFamily   AromaFamily @relation(references: [id], fields: [aromaFamilyId])
-  brews         Brew[]
+  id    String @id @default(cuid())
+  name  String @unique
+  label String
+  color String
+  brews Brew[]
 }
 
-model FlavourFamily {
-  id      String    @id @default(cuid())
-  name    String    @unique
-  color   String
-  flavour Flavour[]
-}
-
-model Flavour {
-  id              String        @id @default(cuid())
-  name            String        @unique
-  color           String
-  flavourFamilyId String
-  brewId          String
-  flavourFamily   FlavourFamily @relation(references: [id], fields: [flavourFamilyId])
-  brews           Brew          @relation(references: [id], fields: [brewId])
+model Flavor {
+  id    String @id @default(cuid())
+  name  String @unique
+  label String
+  color String
+  brews Brew[]
 }
 
 model BrewMethod {
@@ -63,32 +46,32 @@ model Coffee {
 }
 
 model Brew {
-  id             String      @id @default(cuid())
-  createdAt      DateTime    @default(now())
-  cups           Int         @default(1)
-  waterTemp      Int         @default(95)
-  grindSize      Int         @default(30)
-  coffeeQuantity Int         @default(20)
-  waterQuantity  Int         @default(100)
-  isFavorite     Boolean     @default(false)
-  smellIntensity Int         @default(5)
-  smellQuality   Int         @default(5)
-  acidity        Int         @default(5)
-  sweetness      Int         @default(5)
-  bitterness     Int         @default(5)
-  body           Int         @default(5)
-  finish         String?
-  score          Int         @default(5)
-  time           Int         @default(5)
-  flavours       Flavour[]
-  aromas         Aroma[]
-  BrewMethod     BrewMethod? @relation(fields: [brewMethodId], references: [id])
-  brewMethodId   String?
-  Coffee         Coffee?     @relation(fields: [coffeeId], references: [id])
-  coffeeId       String?
-  steps          BrewStep[]
-  User           User?       @relation(fields: [userId], references: [id])
-  userId         Int?
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  cups            Int         @default(1)
+  waterTemp       Int         @default(95)
+  grindSize       Int         @default(30)
+  coffeeQuantity  Int         @default(20)
+  waterQuantity   Int         @default(100)
+  isFavorite      Boolean     @default(false)
+  smellIntensity  Int         @default(5)
+  flavorIntensity Int         @default(5)
+  acidity         Int         @default(5)
+  sweetness       Int         @default(5)
+  bitterness      Int         @default(5)
+  body            Int         @default(5)
+  finish          String?
+  score           Int         @default(5)
+  time            Int         @default(5)
+  flavors         Flavor[]
+  aromas          Aroma[]
+  BrewMethod      BrewMethod? @relation(fields: [brewMethodId], references: [id])
+  brewMethodId    String?
+  Coffee          Coffee?     @relation(fields: [coffeeId], references: [id])
+  coffeeId        String?
+  steps           BrewStep[]
+  User            User?       @relation(fields: [userId], references: [id])
+  userId          Int?
 }
 
 model BrewStep {

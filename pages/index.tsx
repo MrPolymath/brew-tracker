@@ -21,7 +21,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       BrewMethod: true,
     },
   })
-  console.log('brews', brews)
   return {
     props: { brews },
   }

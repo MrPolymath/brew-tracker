@@ -24,7 +24,6 @@ export const Info = ({ data, Icon }) => {
 }
 
 export const BrewPreview = ({ brew }) => {
-  console.log(brew)
   const waterTemp = brew.waterTemp + ' °C'
   const waterQuantity = brew.waterQuantity + ' gr'
   const coffeeQuantity = brew.coffeeQuantity + ' gr'
